@@ -1,10 +1,23 @@
-import argparse
-from scapy.all import *
+import sys
 import random
 import time
+from functools import *
+import argparse
+from scapy.all import *
 
 # Random seed initialization
 random.seed(time.time())
+
+"""
+    The argparse customization is so cool!
+    Reference: https://stackoverflow.com/questions/25295487/python-argparse-value-range-help-message-appearance
+"""
+def range_type(astr, minimum, maximum):
+    value = int(astr)
+    if minimum <= value <= maximum:
+        return value
+    else:
+        raise argparse.ArgumentTypeError("value not in range %s-%s" % (minimum, maximum))
 
 def argument_parser_init():
     parser = argparse.ArgumentParser(prog="tping",
@@ -13,15 +26,21 @@ def argument_parser_init():
                         help="An address of destination")
     parser.add_argument("-6", "--ipv6", dest="is_ipv6", action="store_true",
                         help="Recognize the address of destination to be IPv6 (default: IPv4 address)")
-    parser.add_argument("-1", "--tcp", dest="is_tcp", action="store_true",
+    # Layer 4 protocol mutual-exclusive group
+    l4_group = parser.add_mutually_exclusive_group()
+    l4_group.add_argument("-1", "--tcp", dest="is_tcp", action="store_true",
                         help="Send out the TCP packet (default: ICMP protocol)")
-    parser.add_argument("-2", "--udp", dest="is_udp", action="store_true",
+    l4_group.add_argument("-2", "--udp", dest="is_udp", action="store_true",
                         help="Send out the UDP packet (default: ICMP protocol)")
-    parser.add_argument("-c", "--count", dest="count", type=int, default=0,
+
+    parser.add_argument("-c", "--count", dest="count", metavar="count",
+                        type=partial(range_type, minimum=1, maximum=sys.maxsize), default=0,
                         help="Stop after sending (and receiving) count response packets")
-    parser.add_argument("-p", "--dport", dest="dport", type=int, default=0,
-                        help="Set destination port (default: 0)")
-    parser.add_argument("-s", "--sport", dest="sport", type=int, default=random.randint(1, 65535),
+    parser.add_argument("-p", "--dport", dest="dport", metavar="dest port",
+                        type=partial(range_type, minimum=1, maximum=65535), default=0,
+                        help="Set destination port (default: %(default)s)")
+    parser.add_argument("-s", "--sport", dest="sport", metavar="source port",
+                        type=partial(range_type, minimum=1, maximum=65535), default=random.randint(1, 65535),
                         help="Set source port (default: random)")
     return parser
 
