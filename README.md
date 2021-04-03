@@ -2,15 +2,15 @@
 
 ## Description
 
-The main purpose for the tool is to support a tool like hping3 but support IPv6.
+The main purpose for the tool is to support a tool like **hping3** but support IPv6.
 
-We know hping3 is a good tool.
+We know **hping3** is a good tool.
 
 However, it has a really big defect since it cannot support IPv6 testing.
 
-As a networking engineer, I always need to test some cases based on both IPv4 and IPv6.
+As an networking engineer, I always need to test some cases based on both IPv4 and IPv6.
 
-That is, I decided to develop such a tool based on the well-known Scapy module.
+That is, I decided to develop such a tool based on the well-known **Scapy** module.
 
 Of course, it still has a lot to be improved.
 
