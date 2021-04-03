@@ -17,7 +17,7 @@ Of course, it still has a lot to be improved.
 Therefore, I would try my best to develop the tool and it can be a good practice for me as well.
 
 ## Usage
-
+```
 usage: tping [-h] [-6] [-1] [-2] [-c COUNT] [-p DPORT] [-s SPORT] destination
 
 send common packets to network hosts
@@ -38,3 +38,4 @@ optional arguments:
                         Set destination port (default: 0)
   -s SPORT, --sport SPORT
                         Set source port (default: random)
+```
