@@ -24,6 +24,8 @@ def argument_parser_init():
                                      description="send common packets to network hosts")
     parser.add_argument("destination", type=str,
                         help="An address of destination")
+    parser.add_argument("-a", "--spoof", dest="source", metavar="source", type=str,
+                        help="Set a fake source address")
     parser.add_argument("-6", "--ipv6", dest="is_ipv6", action="store_true",
                         help="Recognize the address of destination to be IPv6 (default: IPv4 address)")
     # Layer 4 protocol mutual-exclusive group
@@ -32,7 +34,7 @@ def argument_parser_init():
                         help="Send out the TCP packet (default: ICMP protocol)")
     l4_group.add_argument("-2", "--udp", dest="is_udp", action="store_true",
                         help="Send out the UDP packet (default: ICMP protocol)")
-
+    ###### End of L4 protocol m-exclusive group ######
     parser.add_argument("-c", "--count", dest="count", metavar="count",
                         type=partial(range_type, minimum=1, maximum=sys.maxsize), default=0,
                         help="Stop after sending (and receiving) count response packets")
@@ -45,7 +47,8 @@ def argument_parser_init():
     return parser
 
 class Tping(object):
-    dest = None
+    dst = None
+    src = None
     is_ipv6 = None
     is_tcp = None
     is_udp = None
@@ -55,7 +58,8 @@ class Tping(object):
 
     def __init__(self, args):
         # Argument initialization
-        self.dest = args.destination
+        self.dst = args.destination
+        self.src = args.source
         self.is_ipv6 = args.is_ipv6
         self.is_tcp = args.is_tcp
         self.is_udp = args.is_udp
@@ -64,7 +68,8 @@ class Tping(object):
         self.sport = args.sport
 
     def print_args(self):
-        print("Destination: " + str(self.dest))
+        print("Destination: " + str(self.dst))
+        print("Source: " + str(self.src))
         print("Is IPv6 enabled: " + str(self.is_ipv6))
         print("Is TCP enabled: " + str(self.is_tcp))
         print("Is UDP enabled: " + str(self.is_udp))
@@ -76,9 +81,13 @@ class Tping(object):
         raw_ip = None
         if self.is_ipv6 == True:
             # TODO: check the destination format
-            raw_ip = IPv6(dst=self.dest)
+            raw_ip = IPv6(dst=self.dst)
         else:
-            raw_ip = IP(dst=self.dest)
+            raw_ip = IP(dst=self.dst)
+
+        if self.src != None:
+            # TODO: check the source format
+            raw_ip.src = self.src
 
         packet = None
         if self.is_tcp == True:
