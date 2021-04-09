@@ -18,7 +18,9 @@ Therefore, I would try my best to develop the tool and it can be a good practice
 
 ## Usage
 ```
-usage: tping [-h] [-6] [-1] [-2] [-c COUNT] [-p DPORT] [-s SPORT] destination
+usage: tping [-h] [-a source] [-6] [-1 | -2] [-c count] [-p dest port]
+             [-s source port]
+             destination
 
 send common packets to network hosts
 
@@ -27,15 +29,18 @@ positional arguments:
 
 optional arguments:
   -h, --help            show this help message and exit
+  -a source, --spoof source
+                        Set a fake source address
   -6, --ipv6            Recognize the address of destination to be IPv6
                         (default: IPv4 address)
   -1, --tcp             Send out the TCP packet (default: ICMP protocol)
   -2, --udp             Send out the UDP packet (default: ICMP protocol)
-  -c COUNT, --count COUNT
+  -c count, --count count
                         Stop after sending (and receiving) count response
                         packets
-  -p DPORT, --dport DPORT
+  -p dest port, --dport dest port
                         Set destination port (default: 0)
-  -s SPORT, --sport SPORT
+  -s source port, --sport source port
                         Set source port (default: random)
+
 ```
