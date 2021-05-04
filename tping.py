@@ -78,34 +78,34 @@ class Tping(object):
         print("Source port: " + str(self.sport))
     
     def run(self):
-        raw_ip = None
+        l3_pkt = None
         if self.is_ipv6 == True:
             # TODO: check the destination format
-            raw_ip = IPv6(dst=self.dst)
+            l3_pkt = IPv6(dst=self.dst)
         else:
-            raw_ip = IP(dst=self.dst)
+            l3_pkt = IP(dst=self.dst)
 
         if self.src != None:
             # TODO: check the source format
-            raw_ip.src = self.src
+            l3_pkt.src = self.src
 
-        packet = None
+        l4_pkt = None
         if self.is_tcp == True:
-            packet = raw_ip/TCP(dport=self.dport, sport=self.sport)
+            l4_pkt = l3_pkt/TCP(dport=self.dport, sport=self.sport)
         elif self.is_udp == True:
-            packet = raw_ip/UDP(dport=self.dport, sport=self.sport)
+            l4_pkt = l3_pkt/UDP(dport=self.dport, sport=self.sport)
         else:
             # Default pakcet is ICMP
             if self.is_ipv6 == True:
-                packet = raw_ip/ICMPv6()
+                l4_pkt = l3_pkt/ICMPv6()
             else:
-                packet = raw_ip/ICMP()
+                l4_pkt = l3_pkt/ICMP()
 
         # send out the packet
         if self.count != 0:
-            resp = srloop(packet, count=self.count)
+            resp = srloop(l4_pkt, count=self.count)
         else:
-            resp = srloop(packet)
+            resp = srloop(l4_pkt)
 
         print(resp)
 
