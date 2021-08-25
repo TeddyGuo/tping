@@ -19,7 +19,7 @@ Therefore, I would try my best to develop the tool and it can be a good practice
 ## Usage
 ```
 usage: tping [-h] [-a source] [-6] [-1 | -2] [-c count] [-p dest port]
-             [-s source port]
+             [-s source port] [-A]
              destination
 
 send common packets to network hosts
@@ -42,5 +42,6 @@ optional arguments:
                         Set destination port (default: 0)
   -s source port, --sport source port
                         Set source port (default: random)
+  -A, --ACK             Set TCP ACK flag
 
 ```
