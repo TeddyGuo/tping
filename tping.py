@@ -44,6 +44,8 @@ def argument_parser_init():
     parser.add_argument("-s", "--sport", dest="sport", metavar="source port",
                         type=partial(range_type, minimum=1, maximum=65535), default=random.randint(1, 65535),
                         help="Set source port (default: random)")
+    parser.add_argument("-A", "--ACK", dest="is_ack", action="store_true",
+                        help="Set TCP ACK flag")
     return parser
 
 class Tping(object):
@@ -55,6 +57,7 @@ class Tping(object):
     count = None
     dport = None
     sport = None
+    is_ack = None
 
     def __init__(self, args):
         # Argument initialization
@@ -66,6 +69,7 @@ class Tping(object):
         self.count = args.count
         self.dport = args.dport
         self.sport = args.sport
+        self.is_ack = args.is_ack
 
     def print_args(self):
         print("Destination: " + str(self.dst))
@@ -76,6 +80,7 @@ class Tping(object):
         print("Count: " + str(self.count))
         print("Destination port: " + str(self.dport))
         print("Source port: " + str(self.sport))
+        print("Is TCP ACK enabled: " + str(self.is_ack))
     
     def run(self):
         l3_pkt = None
@@ -92,6 +97,8 @@ class Tping(object):
         l4_pkt = None
         if self.is_tcp == True:
             l4_pkt = l3_pkt/TCP(dport=self.dport, sport=self.sport)
+            if self.is_ack == True:
+                l4_pkt.flags="A"
         elif self.is_udp == True:
             l4_pkt = l3_pkt/UDP(dport=self.dport, sport=self.sport)
         else:
