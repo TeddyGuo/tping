@@ -46,6 +46,13 @@ def argument_parser_init():
                         help="Set source port (default: random)")
     parser.add_argument("-A", "--ACK", dest="is_ack", action="store_true",
                         help="Set TCP ACK flag")
+    parser.add_argument("-i", "--interval", dest="interval", default=1, type=int, metavar="interval",
+                        help="""Wait the specified number of seconds between sending each packet." 
+                             "--interval X set wait to X seconds,--interval uX set wait to X micro seconds."  
+                             "The default is to wait one second between each packet.""" )
+    parser.add_argument("-u", "--micro", dest="is_microsec", action="store_true",
+                        help="To make interval in microseconds (by default interval is 1 second)")
+
     return parser
 
 class Tping(object):
@@ -58,6 +65,8 @@ class Tping(object):
     dport = None
     sport = None
     is_ack = None
+    interval = None
+    is_microsec = None
 
     def __init__(self, args):
         # Argument initialization
@@ -70,6 +79,8 @@ class Tping(object):
         self.dport = args.dport
         self.sport = args.sport
         self.is_ack = args.is_ack
+        self.interval = args.interval
+        self.is_microsec = args.is_microsec
 
     def print_args(self):
         print("Destination: " + str(self.dst))
@@ -81,7 +92,9 @@ class Tping(object):
         print("Destination port: " + str(self.dport))
         print("Source port: " + str(self.sport))
         print("Is TCP ACK enabled: " + str(self.is_ack))
-    
+        print("Is interval set: " + str(self.interval))
+        print("Is interval set in microsecond: " + str(self.is_microsec))
+   
     def run(self):
         l3_pkt = None
         if self.is_ipv6 == True:
@@ -109,10 +122,21 @@ class Tping(object):
                 l4_pkt = l3_pkt/ICMP()
 
         # send out the packet
-        if self.count != 0:
-            resp = srloop(l4_pkt, count=self.count)
-        else:
-            resp = srloop(l4_pkt)
+        if self.interval !=1 and self.is_microsec ==True:
+            if self.count != 0:
+                resp = send(l4_pkt, count=self.count, loop=1, inter=self.interval/1000000)
+            else:
+                resp = send(l4_pkt, loop=1, inter=self.interval/1000000)
+        elif self.interval !=1 and self.is_microsec ==False:
+            if self.count != 0:
+                resp = send(l4_pkt, loop=1, count=self.count, inter=self.interval)
+            else:
+                resp = send(l4_pkt, loop=1, inter=self.interval)
+        elif self.interval ==1:
+            if self.count != 0:
+                resp = send(l4_pkt, loop=1, count=self.count)
+            else:
+                resp = send(l4_pkt, loop=1)
 
         print(resp)
 
