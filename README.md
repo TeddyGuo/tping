@@ -19,7 +19,7 @@ Therefore, I would try my best to develop the tool and it can be a good practice
 ## Usage
 ```
 usage: tping [-h] [-a source] [-6] [-1 | -2] [-c count] [-p dest port]
-             [-s source port] [-A]
+             [-s source port] [-A] [-i interval] [-u]
              destination
 
 send common packets to network hosts
