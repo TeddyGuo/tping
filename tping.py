@@ -48,11 +48,9 @@ def argument_parser_init():
                         help="Set TCP ACK flag")
     parser.add_argument("-i", "--interval", dest="interval", default=1, type=int, metavar="interval",
                         help="""Wait the specified number of seconds between sending each packet." 
-                             "--interval X set wait to X seconds,--interval uX set wait to X micro seconds."  
                              "The default is to wait one second between each packet.""" )
     parser.add_argument("-u", "--micro", dest="is_microsec", action="store_true",
                         help="To make interval in microseconds (by default interval is 1 second)")
-
     return parser
 
 class Tping(object):
@@ -94,7 +92,7 @@ class Tping(object):
         print("Is TCP ACK enabled: " + str(self.is_ack))
         print("Is interval set: " + str(self.interval))
         print("Is interval set in microsecond: " + str(self.is_microsec))
-   
+
     def run(self):
         l3_pkt = None
         if self.is_ipv6 == True:
@@ -137,6 +135,8 @@ class Tping(object):
                 resp = send(l4_pkt, loop=1, count=self.count)
             else:
                 resp = send(l4_pkt, loop=1)
+
+
 
         print(resp)
 
