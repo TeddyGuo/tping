@@ -43,5 +43,11 @@ optional arguments:
   -s source port, --sport source port
                         Set source port (default: random)
   -A, --ACK             Set TCP ACK flag
-
+  -i interval, --interval interval
+                        Wait the specified number of seconds between sending
+                        each packet." "--interval X set wait to X seconds,--
+                        interval uX set wait to X micro seconds." "The default
+                        is to wait one second between each packet.
+  -u, --micro           To make interval in microseconds (by default interval
+                        is 1 second)
 ```
