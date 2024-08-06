@@ -1,3 +1,5 @@
+#!/usr/bin/python3
+
 import sys
 import random
 import time
@@ -115,7 +117,7 @@ class Tping(object):
         else:
             # Default pakcet is ICMP
             if self.is_ipv6 == True:
-                l4_pkt = l3_pkt/ICMPv6()
+                l4_pkt = l3_pkt/ICMPv6EchoRequest()
             else:
                 l4_pkt = l3_pkt/ICMP()
 
